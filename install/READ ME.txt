@@ -1,0 +1,6 @@
+Migration to Version 4 for already installed application
+
+Step 1.Extract update_v4 folder from gym_mater.zip file
+Step 1.copy src from update_v4 and replace with already installed src folder in gym_master directory.
+
+Note: Please backup 1st your src and webroot folder.

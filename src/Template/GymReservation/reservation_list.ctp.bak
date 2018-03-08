@@ -1,0 +1,167 @@
+<?php $session = $this->request->session()->read("User");?>
+<script>
+$( function() {
+    $( document ).tooltip();
+  } );
+  </script>
+<script>
+$(document).ready(function(){
+
+  	$(".mydataTable").DataTable({
+      "responsive": true,
+      "scrollX": true,
+      "iDisplayLength" : 50,
+  		"order": [[ 1, "asc" ]],
+  		"aoColumns":[
+  	                  {"bSortable": true},
+  	                  {"bSortable": true},
+  	                  {"bSortable": true},
+                      {"bSortable": true},
+                      {"bSortable": false},
+                      <?php if($session["role_name"] == "member"){ ?>{"bSortable": true},<?php }
+                      if($session["role_name"] == "member"){ ?>{"bSortable": false,"visible":false}<?php }else{ ?>{"bSortable": false}<?php } ?>
+  	                  ],
+  	"language" : {<?php echo $this->Gym->data_table_lang();?>}
+  	});
+/*
+    $("a[data-url]").click(function(e) {
+      var ajaxurl = $(this).attr("data-url");
+      //alert(ajaxurl);
+      e.preventDefault();
+      $.ajax({
+        type : "POST",
+        url : "<///////?php echo $this->request->base . "/GymAjax/memberToReservationToggle"?>",
+        success :function(response) {
+              $("#display_test").append(response);
+        },
+        error : function(e){
+          alert("There was an error, Please try again later.");
+          console.log(e.responseText);
+        }
+      });
+    });*/
+});
+
+</script>
+<?php
+if($session["role_name"] == "administrator" || $session["role_name"] == "staff_member" || $session["role_name"] == "accountant")
+{ ?>
+<script>
+
+$(document).ready(function(){
+	//var table = $(".mydataTable").DataTable({"responsive": true});
+	//table.column(5).visible( true );
+});
+</script>
+<?php } ?>
+<section class="content">
+	<br>
+	<div class="col-md-12 box box-default">
+		<div class="box-header">
+			<section class="content-header">
+			  <h1>
+				<i class="fa fa-bars"></i>
+				<?php echo __("Reservation List");?>
+				<small><?php echo __("Reservation");?></small>
+			  </h1>
+			   <?php
+			if($session["role_name"] == "administrator" || $session["role_name"] == "staff_member" || $session["role_name"] == "accountant")
+			{ ?>
+			  <ol class="breadcrumb">
+				<a href="<?php echo $this->Gym->createurl("GymReservation","addReservation");?>" class="btn btn-flat btn-custom"><i class="fa fa-plus"></i> <?php echo __("Add Reservation");?></a>
+			  </ol>
+			<?php } ?>
+			</section>
+		</div>
+		<hr>
+		<div class="box-body">
+			<table class="mydataTable table table-striped">
+			<thead>
+				<tr>
+					<th><?php echo __("Event Name");?></th>
+					<th><?php echo __("Place");?></th>
+          <th><?php echo __("Max members");?></th>
+          <th><?php echo __("Participants");?></th>
+          <th><?php echo __("Time");?></th>
+          <?php if($session["role_name"] == "member") { ?><th><?php echo __("Your state");?></th> <?php } ?>
+					<th><?php echo __("Action");?></th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+					<th><?php echo __("Event Name");?></th>
+					<th><?php echo __("Place");?></th>
+          <th><?php echo __("Max members");?></th>
+          <th><?php echo __("Participants");?></th>
+          <th><?php echo __("Time");?></th>
+          <?php if($session["role_name"] == "member") { ?><th><?php echo __("Your state");?></th> <?php } ?>
+					<th><?php echo __("Action");?></th>
+				</tr>
+			</tfoot>
+			<tbody>
+			<?php
+			foreach($data as $row)
+			{
+        //Get reservationList of this reservation
+        //debug($row); die();
+        $content = "";
+				foreach($row['reservation_list'] as $key => $reservation_item){
+					$content .= "<li class='dropdown-item' type='button'>".__($reservation_item['date']). ' - ' . "{$reservation_item['start_time']}" . ' - ' . "{$reservation_item['end_time']}</li>";
+				}
+        if($content == ""){
+          $content = __("No data available.");
+        }
+				$html = '<div class="dropdown">
+								  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    '.__('More').'
+								  </button>
+								  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2" style="box-shadow: 10px 10px 5px #888888; padding:5px 2px;">
+								    '.$content.'
+								  </ul>
+								</div>';
+
+
+        $full = false;
+        $class = "bg-success";
+        if($row['number_participants'] == $row['max_members']){
+          $full = true;
+          $class = "bg-danger";
+        }
+				echo "<tr>
+					<td>{$row['event_name']}</td>
+					<td>{$row['gym_event_place']['place']}</td>
+          <td style='text-align: center;'><p class='$class'><strong>{$row['max_members']}</strong></p></td>
+          <td style='text-align: center;'><p class='$class'><strong>{$row['number_participants']}</strong></p></td>
+          <td>$html</td>";
+          if($session["role_name"] == "member") {
+          echo "<td>";
+
+              if($this->gym->isMemberInThisReservation($row['id'], $session['id'])){
+                //echo "<a href='javascript: void(0)' data-url='".$this->request->base ."/GymReservation/memberToReservationToggle/{$row['id']}/{$session['id']}' onclick=\"return confirm('Are you sure, you want to unsubscribe from this reservation ?');\" class='btn btn-info btn-flat' id={$row['id']}><i class='fa fa-minus-square' aria-hidden='true'></i></a>";
+                echo $this->Html->link("<i class='fa fa-minus-square' aria-hidden='true'></i>", ["controller" => 'GymReservation',"action" => 'memberToReservationToggle', $row['id'], $session['id']], ['class' => 'btn btn-info btn-flat', 'confirm' => 'Are you sure, you want to unsubscribe from this reservation ?', 'escape' => false]);
+                echo " <span>".__("Subscribed")."</span>";
+              }elseif($row['max_members'] == $row['number_participants']){
+                //echo $this->Html->link("<i class='fa fa-plus-square' aria-hidden='true'></i>", ["#"], ['class' => 'btn btn-info btn-flat disabled', 'escape' => false]);
+                echo __("You can subscribe again to these courses later");
+              }else{
+                //echo "<a href='javascript: void(0)' data-url='".$this->request->base ."/GymReservation/memberToReservationToggle/{$row['id']}/{$session['id']}' onclick=\"return confirm('Are you sure, you want to subscribe to this events ?');\" class='btn btn-info btn-flat' id={$row['id']}><i class='fa fa-plus-square' aria-hidden='true'></i></a>";
+                echo $this->Html->link("<i class='fa fa-plus-square' aria-hidden='true'></i>", ["controller" => 'GymReservation',"action" => 'memberToReservationToggle', $row['id'], $session['id']], ['class' => 'btn btn-info btn-flat', 'confirm' => 'Are you sure, you want to subscribe to this events ?', 'escape' => false]);
+                echo " <span>".__("Unsubscribed")."</span>";
+              }
+          echo "</td>";
+          }
+          echo "<td><a href='".$this->request->base ."/GymReservation/editReservation/{$row['id']}' class='btn btn-primary btn-flat' title='Edit'><i class='fa fa-edit'></i> </a>";
+            echo " <a href='".$this->request->base ."/GymReservation/deleteReservation/{$row['id']}' class='btn btn-danger btn-flat' title='Delete' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='fa fa-trash'></i></a>
+					</td>
+				</tr>";
+			}
+			?>
+			</tbody>
+			</table>
+			<!-- END -->
+		</div>
+		<div class='overlay gym-overlay'>
+			<i class='fa fa-refresh fa-spin'></i>
+		</div>
+	</div>
+</section>

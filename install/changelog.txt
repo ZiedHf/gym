@@ -1,0 +1,24 @@
+===========================================================
+Change Log for GYM Management System for Wordpress  plugin V4 released on 27-01-2017
+===========================================================
+- Added auto select current memember in add workout page.
+- Fixed add level popup issue for mozilla firefox.
+
+
+===========================================================
+Change Log for GYM Management System for Wordpress  plugin V3 released on 21-01-2017
+===========================================================
+- Fixed Accountant Role Menus Display Issue.
+- Fixed dashboard calendar birthday year issue.
+
+===========================================================
+Change Log for GYM Management System for Wordpress  plugin V2 released on 08-12-2016
+===========================================================
+- Added Language Support.
+- Added RTL Language SUpport.
+- Minor code issue fixed.
+
+===========================================================
+Change Log for GYM Management System for Wordpress  plugin V1 released on 16-11-2016
+===========================================================
+-Initial release
