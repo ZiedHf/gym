@@ -12,9 +12,9 @@ $(document).ready(function() {
 	var box_height = box_height + 500 ;
 	$(".content-wrapper").css("height",box_height+"px");
 
-	$('.class_list').multiselect({
+	/*$('.class_list').multiselect({
 		includeSelectAllOption: true
-	});
+	});*/
 
 	$(".datepick").datepicker({format: 'dd/mm/yyyy'});
 	$(".mem_valid_from").datepicker({format: 'dd/mm/yyyy'}).on("changeDate",function(ev){
@@ -345,7 +345,7 @@ function validate_multiselect()
 			//echo "<a href='{$this->request->base}/Membership/add' class='btn btn-flat btn-default'>".__("Add Membership")."</a>";
 			//echo "</div>";
 			echo "</div>";
-
+			/*
 			echo "<div class='form-group'>";
 			echo '<label class="control-label col-md-2" for="email">'. __("Class").'<span class="text-danger"> *</span></label>';
 			echo '<div class="col-md-6">';
@@ -355,7 +355,7 @@ function validate_multiselect()
 			echo "<a href='{$this->request->base}/class-schedule/add-class' class='btn btn-flat btn-default'>".__("Add Class")."</a>";
 			echo "</div>";
 			echo "</div>";
-
+			*/
 			if($edit)
 			{
 			?>

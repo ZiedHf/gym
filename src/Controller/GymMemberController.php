@@ -134,7 +134,7 @@ Class GymMemberController extends AppController
 					{
 						$this->Flash->success(__("Success! Record Saved Successfully."));
 					}
-					if(!empty($this->request->data["assign_class"])){
+					/*if(!empty($this->request->data["assign_class"])){
 						foreach($this->request->data["assign_class"] as $class)
 						{
 							$new_row = $this->GymMember->GymMemberClass->newEntity();
@@ -144,7 +144,7 @@ Class GymMemberController extends AppController
 							$new_row = $this->GymMember->GymMemberClass->patchEntity($new_row,$data);
 							$this->GymMember->GymMemberClass->save($new_row);
 						}
-					}
+					}*/
 				}else
 				{
 					if($member->errors())
@@ -221,7 +221,7 @@ Class GymMemberController extends AppController
 		$classes = $this->GymMember->ClassSchedule->find("list",["keyField"=>"id","valueField"=>"class_name"]);
 		//debug($classes);die();
 
-		$member_classes = $this->GymMember->GymMemberClass->find()->where(["member_id"=>$id])->select(["assign_class"])->hydrate(false)->toArray();
+		/*$member_classes = $this->GymMember->GymMemberClass->find()->where(["member_id"=>$id])->select(["assign_class"])->hydrate(false)->toArray();
 		$mem_classes = array();
 		foreach($member_classes as $mc)
 		{
@@ -229,6 +229,7 @@ Class GymMemberController extends AppController
 		}
 
 		$this->set("member_class",$mem_classes);
+		*/
 		if($session["id"] != $data["id"] && $session["role_name"] != 'administrator')
 		{
 			echo $this->Flash->error("No sneaking around! ;( ");
@@ -253,7 +254,7 @@ Class GymMemberController extends AppController
 		$this->set("referrer_by",$staff);
 
 		$this->render("addMember");
-		
+
 		if($this->request->is("post"))
 		{
 			$ext = $this->GYMFunction->check_valid_extension($this->request->data['image']['name']);
@@ -298,7 +299,7 @@ Class GymMemberController extends AppController
 			if($this->GymMember->save($update))
 			{
 				$this->Flash->success(__("Success! Record Saved Successfully."));
-				$this->GymMember->GymMemberClass->deleteAll(["member_id"=>$id]);
+				/*$this->GymMember->GymMemberClass->deleteAll(["member_id"=>$id]);
 				if(!empty($this->request->data["assign_class"])){
 					foreach($this->request->data["assign_class"] as $class)
 					{
@@ -309,7 +310,7 @@ Class GymMemberController extends AppController
 						$new_row = $this->GymMember->GymMemberClass->patchEntity($new_row,$data);
 						$this->GymMember->GymMemberClass->save($new_row);
 					}
-				}
+				}*/
 				return $this->redirect(["action"=>"memberList"]);
 			}
 			else

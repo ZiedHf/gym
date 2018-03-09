@@ -594,13 +594,13 @@ Class GYMfunctionComponent extends Component
 
 	public function get_class_by_member($mid)
 	{
-		$class_table = TableRegistry::get("GymMemberClass");
+		// $class_table = TableRegistry::get("GymMemberClass");
 		$class_sche_table = TableRegistry::get("ClassSchedule");
-		$row = $class_table->find()->where(["member_id"=>$mid])->select(["assign_class"])->hydrate(false)->toArray();
+		$row = $class_sche_table->find()->select(["id"])->hydrate(false)->toArray();
 		$class = array();
 		foreach($row  as $data)
 		{
-			$class[]= $data["assign_class"];
+			$class[]= $data["id"];
 		}
 		return $class;
 	}

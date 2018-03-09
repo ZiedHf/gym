@@ -85,11 +85,11 @@ $(document).ready(function(){
 				<?php foreach($data as $row)
 				{ ?>
 				<tr>
-					<td class="checkbox_field"><span><input type="checkbox" class="checkbox1" name="attendance[]" value="<?php echo $row["gym_member"]["id"];?>"></span></td>
-					<td><img src="<?php echo $this->request->base ."/webroot/upload/".$row["gym_member"]['image']; ?>" class='membership-img img-circle'></td>
-					<td><span><?php echo $row["gym_member"]['first_name']." ".$row["gym_member"]['last_name']."(".$row["gym_member"]['member_id'].")"; ?></span></td>
+					<td class="checkbox_field"><span><input type="checkbox" class="checkbox1" name="attendance[]" value="<?php echo $row["id"];?>"></span></td>
+					<td><img src="<?php echo $this->request->base ."/webroot/upload/".$row['image']; ?>" class='membership-img img-circle'></td>
+					<td><span><?php echo $row['first_name']." ".$row['last_name']."(".$row['member_id'].")"; ?></span></td>
 					<td><?php
-						$att_status = $this->Gym->get_attendance_status($row["gym_member"]["id"],$_POST["curr_date"]);
+						$att_status = $this->Gym->get_attendance_status($row["id"],$_POST["curr_date"]);
 						echo __($att_status); ?>
 					</td>
 				</tr>

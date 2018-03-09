@@ -543,15 +543,18 @@ class DashboardController extends AppController
 		$gym_member_tbl = TableRegistry::get("gym_member");
 		$class_schedule_tbl = TableRegistry::get("class_schedule");
 		$assign_class = array();
-		$classes_list = $class_schedule_tbl->GymMemberClass->find()->where(["member_id"=>$session["id"]])->hydrate(false)->toArray();
+		//$classes_list = $class_schedule_tbl->GymMemberClass->find()->where(["member_id"=>$session["id"]])->hydrate(false)->toArray();
+		$classes_list = $class_schedule_tbl->find()->hydrate(false)->toArray();
 		if(is_array($classes_list)) {
 			foreach($classes_list as $class)
 			{
 				if(isset($club)) {
-					 list($class_schedule) = $class_schedule_tbl->find("all")->where(["id"=>$class["assign_class"]])->hydrate(false)->toArray();
-					if($class_schedule['location']==$club) $assign_class[] = $class["assign_class"];
+					 //list($class_schedule) = $class_schedule_tbl->find("all")->where(["id"=>$class["assign_class"]])->hydrate(false)->toArray();
+					 list($class_schedule) = $class;
+					//if($class_schedule['location']==$club) $assign_class[] = $class["assign_class"];
+					if($class_schedule['location']==$club) $assign_class[] = $class["id"];
 				}
-				else $assign_class[] = $class["assign_class"];
+				else $assign_class[] = $class["id"];
 			}
 
 			if(count($assign_class)>0) {

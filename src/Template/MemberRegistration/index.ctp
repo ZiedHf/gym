@@ -49,9 +49,9 @@ $(".validateForm").validationEngine();
 	var box_height = box_height + 500 ;
 	$(".content-wrapper").css("height",box_height+"px");
 
-	$('.class_list').multiselect({
+	/*$('.class_list').multiselect({
 		includeSelectAllOption: true
-	});
+	});*/
 
 	$(".datepick").datepicker({format: 'dd-mm-yyyy',"language" : "<?php echo $dtp_lang;?>"});
 
@@ -166,12 +166,12 @@ $(".validateForm").validationEngine();
 			echo "</div>";
 			echo "</div>";
 
-			echo "<div class='form-group'>";
+			/*echo "<div class='form-group'>";
 			echo '<label class="control-label col-md-2" for="email">'. __("Class").'<span class="text-danger"> *</span></label>';
 			echo '<div class="col-md-6">';
 			echo @$this->Form->select("assign_class",$classes,["default"=>$member_class,"class"=>"class_list form-control validate[required]","multiple"=>"multiple"]);
 			echo "</div>";
-			echo "</div>";
+			echo "</div>";*/
 			/*
 			echo "<div class='form-group'>";
 			echo '<label class="control-label col-md-2" for="email">'. __("Group").'</label>';

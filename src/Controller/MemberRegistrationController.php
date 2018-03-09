@@ -37,14 +37,14 @@ Class MemberRegistrationController  extends AppController
 		$member_id = $prefix.$m.$y;
 
 		$this->set("member_id",$member_id);
-		$classes = $this->MemberRegistration->GymMember->ClassSchedule->find("list",["keyField"=>"id","valueField"=>"class_name"]);
+		// $classes = $this->MemberRegistration->GymMember->ClassSchedule->find("list",["keyField"=>"id","valueField"=>"class_name"]);
 		$groups = $this->MemberRegistration->GymMember->GymGroup->find("list",["keyField"=>"id","valueField"=>"name"]);
 		$interest = $this->MemberRegistration->GymMember->GymInterestArea->find("list",["keyField"=>"id","valueField"=>"interest"]);
 		$source = $this->MemberRegistration->GymMember->GymSource->find("list",["keyField"=>"id","valueField"=>"source_name"]);
 		$membership = $this->MemberRegistration->GymMember->Membership->find("list",["keyField"=>"id","valueField"=>"membership_label"]);
 
 
-		$this->set("classes",$classes);
+		// $this->set("classes",$classes);
 		$this->set("groups",$groups);
 		$this->set("interest",$interest);
 		$this->set("source",$source);
@@ -75,7 +75,7 @@ Class MemberRegistrationController  extends AppController
 					// $this->Flash->success(__("Success! Record Saved Successfully."));
 				}
 
-				if(!empty($this->request->data["assign_class"]))
+				/*if(!empty($this->request->data["assign_class"]))
 				{
 					foreach($this->request->data["assign_class"] as $class)
 					{
@@ -86,7 +86,7 @@ Class MemberRegistrationController  extends AppController
 						$new_row = $this->MemberRegistration->GymMemberClass->patchEntity($new_row,$data);
 						$this->MemberRegistration->GymMemberClass->save($new_row);
 					}
-				}
+				}*/
 
 				$sys_email = $this->GYMFunction->getSettings("email");
 				$sys_name = $this->GYMFunction->getSettings("name");

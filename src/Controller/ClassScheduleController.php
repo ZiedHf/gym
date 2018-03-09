@@ -15,9 +15,12 @@ class ClassScheduleController extends AppController
 		// $data = $this->ClassSchedule->find("all")->hydrate(false)->toArray();
 		$session = $this->request->session()->read("User");
 		$data = array();
-		if($session["role_name"]=="member")
+		$data = $this->ClassSchedule->find();
+		$data = $data->contain(["GymMember", "ClassScheduleList"])->hydrate(false)->toArray();
+		/*if($session["role_name"]=="member")
 		{
-			$classes = $this->ClassSchedule->GymMemberClass->find()->where(["member_id"=>$session["id"]])->hydrate(false)->toArray();
+			$classes = $this->ClassSchedule->find()->hydrate(false)->toArray();
+			debug($classes);die();
 			if(!empty($classes))
 			{
 				foreach($classes as $class)
@@ -26,6 +29,7 @@ class ClassScheduleController extends AppController
 				}
 				$data = $this->ClassSchedule->find()->contain(["ClassScheduleList"])->where(["ClassSchedule.id IN "=>$assign_class]);
 				$data = $data->contain(["GymMember"])->select(["ClassSchedule.id","ClassSchedule.class_name","ClassSchedule.assign_staff_mem","ClassSchedule.start_time","ClassSchedule.end_time","ClassSchedule.location","GymMember.first_name","GymMember.last_name"])->hydrate(false)->toArray();
+
 			}
 		}
 		else{
@@ -34,6 +38,7 @@ class ClassScheduleController extends AppController
 			//debug($data); die();
 			//$schedule_list = $this->ClassSchedule->ClassScheduleList->find()->hydrate(false)->toArray();
 		}
+		*/
 		//$schedule_list = $this->ClassSchedule->ClassScheduleList->find()->where(["class_id"=>$id])->hydrate(false)->toArray();
 		$this->set("data",$data);
 	}
