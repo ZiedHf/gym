@@ -3319,3 +3319,6 @@ msgid "objects"
 msgstr "objets"
 msgid "Objects"
 msgstr "Objets"
+
+msgid "Please Choose"
+msgstr "Merci de choisir"

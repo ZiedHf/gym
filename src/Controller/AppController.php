@@ -42,7 +42,6 @@ class AppController extends Controller
 	 public function initialize()
     {
         parent::initialize();
-
 				// Set the database
 				if(isset($this->request->data['gym'])){
 					$database = $this->request->data['gym'];

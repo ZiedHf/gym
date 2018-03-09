@@ -224,6 +224,18 @@ echo $this->Html->script('fullcalendar.min');
 			<div class="col-md-12 col-sm-12 col-xs-12">
 				<div class="panel panel-white">
 					<div class="panel-body">
+            <form method="POST">
+              <select class="form-control" name="gymCalendar" required onchange="this.form.submit()">
+                <option value=""><?=__('Please choose')?></option>
+                <?php
+                  foreach ($gyms as $gym => $data) {
+                ?>
+                    <option value="<?=$gym?>" <?=$gym===$gymCalendar ? 'selected' : ''?>><?=$gym?></option>
+                <?php
+                  }
+                ?>
+              </select>
+            </form>
 						<div id="calendar">
 						</div>
 				</div>

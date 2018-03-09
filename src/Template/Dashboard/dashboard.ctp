@@ -289,7 +289,20 @@ function afficherparclub(url)
 			echo "</div>";*/
 			?>
 				<div class="panel panel-white">
+
 					<div class="panel-body">
+            <form method="POST">
+              <select class="form-control" name="gymCalendar" required onchange="this.form.submit()">
+                <option value=""><?=__('Please choose')?></option>
+                <?php
+                  foreach ($gyms as $gym => $data) {
+                ?>
+                    <option value="<?=$gym?>" <?=$gym===$gymCalendar ? 'selected' : ''?>><?=$gym?></option>
+                <?php
+                  }
+                ?>
+              </select>
+            </form>
 						<div id="calendar">
 						</div>
 				</div>
@@ -461,3 +474,9 @@ function afficherparclub(url)
 
 	</div>
  </div>
+
+ <script>
+ $("select.form-control[name=gym]").change(function(e){
+   //form.submit();
+ });
+ </script>

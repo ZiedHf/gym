@@ -22,7 +22,6 @@ class DashboardController extends AppController
 	public function index()
 	{
 		$session = $this->request->session()->read("User");
-
 		switch($session["role_name"])
 		{
 			CASE "administrator":
@@ -39,6 +38,7 @@ class DashboardController extends AppController
 	public function adminDashboard()
 	{
 		$session = $this->request->session()->read("User");
+
 		$conn = ConnectionManager::get('default');
 		$this->autoRender = false;
 		$mem_table = TableRegistry::get("GymMember");
@@ -72,7 +72,10 @@ class DashboardController extends AppController
 		$this->set("groups",$groups);
 		$this->set("membership",$membership);
 		$this->set("groups_data",$groups_data);
-
+		$gymCalendar = isset($this->request->data['gymCalendar']) ? $this->request->data['gymCalendar'] : $this->getGymNameByDb($this->request->session()->read('database'));
+		$this->set("gymCalendar", $gymCalendar);
+		$gyms = unserialize(GYMS1);
+		$this->set("gyms", $gyms);
 		################################################
 
 		$month =array('1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",
@@ -219,6 +222,11 @@ class DashboardController extends AppController
 		$this->set("reservations",$reservations);
 		$this->set("courses",$courses);
 
+		$gymCalendar = isset($this->request->data['gymCalendar']) ? $this->request->data['gymCalendar'] : $this->getGymNameByDb($this->request->session()->read('database'));
+		$this->set("gymCalendar", $gymCalendar);
+		$gyms = unserialize(GYMS1);
+		$this->set("gyms", $gyms);
+
 		$weight_data["data"] = $this->GYMFunction->generate_chart("Weight",$uid);
 		$weight_data["option"] = $this->GYMFunction->report_option("Weight");
 		$this->set("weight_data",$weight_data);
@@ -293,6 +301,10 @@ class DashboardController extends AppController
 		$this->set("membership",$membership);
 		$this->set("groups_data",$groups_data);
 
+		$gymCalendar = isset($this->request->data['gymCalendar']) ? $this->request->data['gymCalendar'] : $this->getGymNameByDb($this->request->session()->read('database'));
+		$this->set("gymCalendar", $gymCalendar);
+		$gyms = unserialize(GYMS1);
+		$this->set("gyms", $gyms);
 	}
 
 	public function getCalendarData()
@@ -462,8 +474,20 @@ class DashboardController extends AppController
 		return $cal_array;
 	}
 
-	function allClassScheduleFromDatabases($weekagoTimeStamp, $monthAheadTimeStamp, $type, $club = null){
-		$gyms = unserialize(GYMS1);
+	function getGymNameByDb($db){
+		$gymsData = unserialize(GYMS1);
+		foreach ($gymsData as $gymName => $data) {
+			if($data['db'] == $db){
+				return $gymName;
+			}
+		}
+	}
+	function allClassScheduleFromDatabases($weekagoTimeStamp, $monthAheadTimeStamp, $type,$club = null){
+		$gymsData = unserialize(GYMS1);
+
+		$gymClub = isset($this->request->data['gymCalendar']) ? $this->request->data['gymCalendar'] : $this->getGymNameByDb($this->request->session()->read('database'));
+
+		$gyms[$gymClub] = $gymsData[$gymClub];
 		$initialDb = $this->request->session()->read('database');
 		$cal_array = [];
 		foreach ($gyms as $key => $gym) {
