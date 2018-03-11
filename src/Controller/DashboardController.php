@@ -45,7 +45,7 @@ class DashboardController extends AppController
 		$grp_tbl = TableRegistry::get("GymGroup");
 		$message_tbl = TableRegistry::get("GymMessage");
 		$membership_tbl = TableRegistry::get("Membership");
-		$notice_tbl = TableRegistry::get("gym_notice");
+		$notice_tbl = TableRegistry::get("gymNotice");
 
 		$members = $mem_table->find("all")->where(["role_name"=>"member"]);
 		$members = $members->count();
@@ -166,10 +166,10 @@ class DashboardController extends AppController
 		$grp_tbl = TableRegistry::get("GymGroup");
 		$message_tbl = TableRegistry::get("GymMessage");
 		$membership_tbl = TableRegistry::get("Membership");
-		$res_tbl = TableRegistry::get("gym_reservation");
-		$notice_tbl = TableRegistry::get("gym_notice");
+		$res_tbl = TableRegistry::get("gymReservation");
+		$notice_tbl = TableRegistry::get("gymNotice");
 
-		$schedule_tbl = TableRegistry::get("class_schedule");
+		$schedule_tbl = TableRegistry::get("classSchedule");
 
 		$members = $mem_table->find("all")->where(["role_name"=>"member"]);
 		$members = $members->count();
@@ -269,8 +269,8 @@ class DashboardController extends AppController
 		$grp_tbl = TableRegistry::get("GymGroup");
 		$message_tbl = TableRegistry::get("GymMessage");
 		$membership_tbl = TableRegistry::get("Membership");
-		$res_tbl = TableRegistry::get("gym_reservation");
-		$notice_tbl = TableRegistry::get("gym_notice");
+		$res_tbl = TableRegistry::get("gymReservation");
+		$notice_tbl = TableRegistry::get("gymNotice");
 
 		$members = $mem_table->find("all")->where(["role_name"=>"member"]);
 		$members = $members->count();
@@ -310,12 +310,12 @@ class DashboardController extends AppController
 	public function getCalendarData()
 	{
 		$session = $this->request->session()->read("User");
-		$res_tbl = TableRegistry::get("gym_reservation");
+		$res_tbl = TableRegistry::get("gymReservation");
 		$mem_table = TableRegistry::get("GymMember");
 		$grp_tbl = TableRegistry::get("GymGroup");
 		$message_tbl = TableRegistry::get("GymMessage");
 		$membership_tbl = TableRegistry::get("Membership");
-		$notice_tbl = TableRegistry::get("gym_notice");
+		$notice_tbl = TableRegistry::get("gymNotice");
 
 		$weekagoTimeStamp = strtotime('-7 days');
 		$monthAheadTimeStamp = strtotime('90 days');
@@ -334,15 +334,8 @@ class DashboardController extends AppController
 																	isset($club) ? $club : null);
 		$cal_array = array_merge($cal_array, $cal_arrayClass);
 
-		/*if($session["role_name"]=="member") {
-
-		}
-		else {
-			$cal_arrayClass = $this->allClassScheduleFromDatabases($weekagoTimeStamp, $monthAheadTimeStamp, isset($club) ? $club : null);
-			$cal_array = array_merge($cal_array, $cal_arrayClass);
-		}*/
 		$reservationdata = $res_tbl->find("all")->contain(['ReservationList'])->hydrate(false)->toArray();
-		//debug($reservationdata);die();
+
 		if(!empty($reservationdata))
 		{
 			foreach ($reservationdata as $retrieved_data){
@@ -350,13 +343,13 @@ class DashboardController extends AppController
 
 				$res_mem_table = TableRegistry::get("ReservationMember");
 				$row = $res_mem_table->find()->where(["reservation_id"=>$retrieved_data['id'],"member_id"=>$session['id']]);
-				//debug($row->count()); die();
-				$color = "";
+
+				$color = $retrieved_data['color'];
 				$state = 'enabled';
 				if($row->count() > 0){
-					$color = '#121212';
 					$state = 'disabled';
 				}
+
 				if($retrieved_data['max_members'] == $retrieved_data['number_participants']){
 					$state = 'disabled';
 				}
@@ -470,7 +463,6 @@ class DashboardController extends AppController
 				}
 			}
 		}
-
 		return $cal_array;
 	}
 
@@ -490,8 +482,10 @@ class DashboardController extends AppController
 		$gyms[$gymClub] = $gymsData[$gymClub];
 		$initialDb = $this->request->session()->read('database');
 		$cal_array = [];
+		//debug($gyms);die;
 		foreach ($gyms as $key => $gym) {
 			$database = $gym['db'];
+			//debug($gym);die;
 			ConnectionManager::alias($database, 'default');
 			if($type == 'member') {
 				$cal_arrayClass = $this->getClassScheduleMember($key, $weekagoTimeStamp, $monthAheadTimeStamp, $club = null);
@@ -505,7 +499,7 @@ class DashboardController extends AppController
 	}
 	function getClassSchedule($isDefaultDb, $gym, $weekagoTimeStamp, $monthAheadTimeStamp, $club = null){
 		$cal_array = [];
-		$class_schedule_tbl = TableRegistry::get("class_schedule");
+		$class_schedule_tbl = TableRegistry::get("classSchedule");
 		if(isset($club)) $tClassSchedule = $class_schedule_tbl->find("all")->where(["location"=>$club])->hydrate(false)->toArray();
 		else $tClassSchedule = $class_schedule_tbl->find("all")->hydrate(false)->toArray();
 		if(is_array($tClassSchedule)) {
@@ -540,9 +534,9 @@ class DashboardController extends AppController
 	public function getClassScheduleMember($gym, $weekagoTimeStamp, $monthAheadTimeStamp, $club = null){
 		$cal_array = [];
 		$session = $this->request->session()->read("User");
-		$gym_member_tbl = TableRegistry::get("gym_member");
-		$class_schedule_tbl = TableRegistry::get("class_schedule");
+		$class_schedule_tbl = TableRegistry::get("classSchedule");
 		$assign_class = array();
+
 		//$classes_list = $class_schedule_tbl->GymMemberClass->find()->where(["member_id"=>$session["id"]])->hydrate(false)->toArray();
 		$classes_list = $class_schedule_tbl->find()->hydrate(false)->toArray();
 		if(is_array($classes_list)) {
@@ -574,7 +568,7 @@ class DashboardController extends AppController
 								'title' => $hc['class_name'] .' || '. $gym,
 								'start' => $hc['days']."T{$start_time}",
 								'end' => $hc['days']."T{$end_time}",
-								'backgroundColor' => '#4169E1'
+								'backgroundColor' => isset($getClassInfo['color']) ? $getClassInfo['color'] : '#4169E1'
 							);
 						}
 					}

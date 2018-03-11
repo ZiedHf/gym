@@ -390,7 +390,7 @@ Class GymAjaxController extends AppController
 							</tr>";
 						}
 					//}else{echo "<tr><td colspan='2'>".__("No record added yet")."</td></tr>";}
-					}else{echo "<tr id='empty_row'><td colspan='2'>".__("No record added yet")."</td></tr>";}					
+					}else{echo "<tr id='empty_row'><td colspan='2'>".__("No record added yet")."</td></tr>";}
 					?>
 					</tbody>
 					</table>
@@ -1095,8 +1095,8 @@ Class GymAjaxController extends AppController
 		?>
 		<script>
 			$(document).ready(function(){
-				$(".validateForm").validationEngine(); /* {binded:false} */		
-			});		
+				$(".validateForm").validationEngine(); /* {binded:false} */
+			});
 		</script>
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -1512,11 +1512,11 @@ Class GymAjaxController extends AppController
 		if($this->request->is("ajax"))
 		{
 			$member_id = $this->request->data["member_id"];
-			$member_tbl = TableRegistry::get("gym_member");
+			$member_tbl = TableRegistry::get("gymMember");
 			$data = $member_tbl->get($member_id)->toArray();
 			$membership = $data["selected_membership"];
 			$activity = TableRegistry::get("activity");
-			$mem_activity_tbl = TableRegistry::get("membership_activity");
+			$mem_activity_tbl = TableRegistry::get("membershipActivity");
 			$activities = $mem_activity_tbl->find()->where(["membership_id"=>$membership]);
 			$activities = $activities->leftjoin(["activity"=>"activity"],
 										["activity.id = membership_activity.activity_id"])->select($activity)->hydrate(false)->toArray();

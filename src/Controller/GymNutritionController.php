@@ -1,16 +1,16 @@
 <?php
 namespace App\Controller;
 use App\Controller\AppController;
-use Cake\ORM\TableRegistry; 
+use Cake\ORM\TableRegistry;
 
 class GymNutritionController extends AppController
 {
 	public function initialize()
 	{
-		parent::initialize();		
+		parent::initialize();
 		$this->loadComponent("GYMFunction");
 	}
-	
+
 	public function nutritionList()
 	{
 		$session = $this->request->session()->read("User");
@@ -25,19 +25,19 @@ class GymNutritionController extends AppController
 				$data = $data->select(["GymMember.first_name","GymMember.last_name","GymMember.image","GymMember.member_id","GymMember.intrested_area"])->hydrate(false)->toArray();
 			}
 		}
-		else{			
+		else{
 			$data = $this->GymNutrition->find("all")->contain(["GymMember"])->select($this->GymNutrition)->group(["user_id","GymNutrition.id"]);
 			$data = $data->select(["GymMember.first_name","GymMember.last_name","GymMember.image","GymMember.member_id","GymMember.intrested_area"])->hydrate(false)->toArray();
-		}	
+		}
 		$this->set("data",$data);
 	}
-	
+
 	public function addNutritionSchedule()
 	{
 		$session = $this->request->session()->read("User");
 		$this->set("edit",false);
 		$this->set("title",__("Add Nutrition Schedule"));
-		
+
 		if($session["role_name"] == "staff_member")
 		{
 			if($this->GYMFunction->getSettings("staff_can_view_own_member"))
@@ -54,80 +54,80 @@ class GymNutritionController extends AppController
 			$members = $this->GymNutrition->GymMember->find("list",["keyField"=>"id","valueField"=>"name"])->where(["role_name"=>"member"]);
 			$members = $members->select(["id",'name'=>$members->func()->concat(['first_name'=>'literal',' ','last_name'=>'literal'])])->hydrate(false)->toArray();
 		}
-		
+
 		$this->set("members",$members);
-		
+
 		if($this->request->is("post"))
-		{			
+		{
 			$row = $this->GymNutrition->newEntity();
-			$data = $this->request->data;			
+			$data = $this->request->data;
 			$data["created_by"] = $session["id"];
 			$data["created_date"] = date("Y-m-d");
 			$row = $this->GymNutrition->patchEntity($row,$data);
 			if($this->GymNutrition->save($row))
 			{
 				$nid = $row->id;
-				$save = true;			
+				$save = true;
 			}
 			if($save)
-			{				
+			{
 				if($this->nutrition_detail($nid,$data['activity_list']))
 				{
-					$this->Flash->success(__("Success"));	
+					$this->Flash->success(__("Success"));
 					return $this->redirect(["action"=>"nutritionList"]);
 				}
 				else{
-					$this->Flash->error(__("Error! Nutrition data couldn't saved.Please try again."));				
-				}				
+					$this->Flash->error(__("Error! Nutrition data couldn't saved.Please try again."));
+				}
 			}
 			else{
-					$this->Flash->error(__("Error! Nutrition Schedule couldn't saved.Please try again."));				
+					$this->Flash->error(__("Error! Nutrition Schedule couldn't saved.Please try again."));
 				}
-			
+
 		}
 	}
-	
+
 	public function nutrition_detail($nutrition_id,$activity_list)
 	{
 		foreach($activity_list as $val)
 			{
 				$data_value = json_decode($val);
-				$phpobj[] = json_decode(stripslashes($val),true);				
+				$phpobj[] = json_decode(stripslashes($val),true);
 			}
-			
+
 			$final_array = array();
 			$resultarray =array();
-			
+
 			foreach($phpobj as $index => $value)
 			{
 				$day = array();
 				$activity = array();
 				foreach($value as $key => $val)
 				{
-					
+
 					if($key == "days")
 					{	foreach($val as $val1)
 						{
 							$day['day'][] =$val1['day_name'] ;
-						}	
+						}
 					}
 					if($key == "activity")
 					{
 						foreach($val as $val2)
 						{
-							
-							
+
+
 							$activity['activity'][] =array('activity'=>$val2['activity']['activity'],
 														'value'=>$val2['activity']['value']
-														
+
 							) ;
 						}
 					}
 				}
 				$resultarray[] = array_merge($day, $activity);
 			}
-			
-		$work_outdata = $resultarray;		
+
+		$work_outdata = $resultarray;
 		if(!empty($work_outdata))
 		{
 			$workout_data = array();
@@ -140,16 +140,16 @@ class GymNutritionController extends AppController
 						$workout_data['day_name'] = $day;
 						$workout_data['nutrition_time'] = $actname['activity'];
 						$workout_data['nutrition_value'] = $actname['value'];
-					
+
 						$workout_data['nutrition_id'] = $nutrition_id;
 						$workout_data['created_date'] = date("Y-m-d");
-						$workout_data['create_by'] = 1;						
-						$rws[] = $workout_data;							
+						$workout_data['create_by'] = 1;
+						$rws[] = $workout_data;
 					}
-				}				
-			}			
-		}		
-	
+				}
+			}
+		}
+
 		$ma_row = $this->GymNutrition->GymNutritionData->newEntities($rws);
 		foreach($ma_row as $m_row)
 		{
@@ -160,74 +160,74 @@ class GymNutritionController extends AppController
 				$success = 0;
 			}
 		}
-	
+
 		return $success;
 	}
-	
+
 	public function viewNutirion($id)
 	{
 		$session = $this->request->session()->read("User");
 		$this->set("edit",true);
 		$this->set("title",__("View Nutrition Schedule"));
-		
+
 		$members = $this->GymNutrition->GymMember->find("list",["keyField"=>"id","valueField"=>"name"]);
 		$members = $members->select(["id",'name'=>$members->func()->concat(['first_name'=>'literal',' ','last_name'=>'literal'])])->hydrate(false)->toArray();
 		$this->set("members",$members);
-		
+
 		$data = $this->GymNutrition->find()->where(["GymNutrition.user_id"=>$id])->select(["GymNutrition.start_date","GymNutrition.expire_date"]);
 		$data = $data->leftjoin(["GymNutritionData"=>"gym_nutrition_data"],
 								["GymNutritionData.nutrition_id = GymNutrition.id"]
 								)->select($this->GymNutrition->GymNutritionData)->hydrate(false)->toArray();
-		
+
 		$nutrition_data = array();
 		foreach($data as $key=>$value)
-		{ 			
+		{
 			foreach($value as $k=>$v)
-			{ 
+			{
 				if($k == "GymNutritionData"){
-					$wid = $v["nutrition_id"];					
+					$wid = $v["nutrition_id"];
 					if($wid != "")
 					{
-						$nutrition_data[$wid]["start_date"]= $value["start_date"];					
-						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];						
-						$nutrition_data[$wid][]=$v;							
+						$nutrition_data[$wid]["start_date"]= $value["start_date"];
+						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];
+						$nutrition_data[$wid][]=$v;
 					}
-				}				
-			}			
-		}		
+				}
+			}
+		}
 		$this->set("nutrition_data",$nutrition_data);
-		
+
 		if($this->request->is("post"))
 		{
 			$row = $this->GymNutrition->newEntity();
-			$data = $this->request->data;			
+			$data = $this->request->data;
 			$data["created_by"] = $session["id"];
 			$data["created_date"] = date("Y-m-d");
 			$row = $this->GymNutrition->patchEntity($row,$data);
 			if($this->GymNutrition->save($row))
 			{
 				$nid = $row->id;
-				$save = true;			
+				$save = true;
 			}
 			if($save)
-			{				
+			{
 				if($this->nutrition_detail($nid,$data['activity_list']))
 				{
-					$this->Flash->success(__("Success"));	
+					$this->Flash->success(__("Success"));
 					return $this->redirect(["action"=>"nutritionList"]);
 				}
 				else{
-					$this->Flash->error(__("Error! Nutrition data couldn't saved.Please try again."));				
-				}				
+					$this->Flash->error(__("Error! Nutrition data couldn't saved.Please try again."));
+				}
 			}
 			else{
-					$this->Flash->error(__("Error! Nutrition Schedule couldn't saved.Please try again."));				
+					$this->Flash->error(__("Error! Nutrition Schedule couldn't saved.Please try again."));
 				}
-			
+
 		}
-		$this->render("addnutritionSchedule");		
+		$this->render("addnutritionSchedule");
 	}
-	
+
 	public function memberNutrition()
 	{
 		$session = $this->request->session()->read("User");
@@ -236,26 +236,26 @@ class GymNutritionController extends AppController
 		$data = $data->leftjoin(["GymNutritionData"=>"gym_nutrition_data"],
 								["GymNutritionData.nutrition_id = GymNutrition.id"]
 								)->select($this->GymNutrition->GymNutritionData)->hydrate(false)->toArray();
-		
+
 		$nutrition_data = array();
 		foreach($data as $key=>$value)
-		{ 			
+		{
 			foreach($value as $k=>$v)
-			{ 
+			{
 				if($k == "GymNutritionData"){
-					$wid = $v["nutrition_id"];					
+					$wid = $v["nutrition_id"];
 					if($wid != "")
 					{
-						$nutrition_data[$wid]["start_date"]= $value["start_date"];					
-						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];						
-						$nutrition_data[$wid][]=$v;							
+						$nutrition_data[$wid]["start_date"]= $value["start_date"];
+						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];
+						$nutrition_data[$wid][]=$v;
 					}
-				}				
-			}			
-		}		
+				}
+			}
+		}
 		$this->set("nutrition_data",$nutrition_data);
 	}
-	
+
 	public function printNutrition()
 	{
 		$session = $this->request->session()->read("User");
@@ -264,29 +264,29 @@ class GymNutritionController extends AppController
 		$data = $data->leftjoin(["GymNutritionData"=>"gym_nutrition_data"],
 								["GymNutritionData.nutrition_id = GymNutrition.id"]
 								)->select($this->GymNutrition->GymNutritionData)->hydrate(false)->toArray();
-		
+
 		$nutrition_data = array();
 		foreach($data as $key=>$value)
-		{ 			
+		{
 			foreach($value as $k=>$v)
-			{ 
+			{
 				if($k == "GymNutritionData"){
-					$wid = $v["nutrition_id"];					
+					$wid = $v["nutrition_id"];
 					if($wid != "")
 					{
-						$nutrition_data[$wid]["start_date"]= $value["start_date"];					
-						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];						
-						$nutrition_data[$wid][]=$v;							
+						$nutrition_data[$wid]["start_date"]= $value["start_date"];
+						$nutrition_data[$wid]["expire_date"]= $value["expire_date"];
+						$nutrition_data[$wid][]=$v;
 					}
-				}				
-			}			
-		}		
+				}
+			}
+		}
 		$this->set("nutrition_data",$nutrition_data);
 	}
-	
+
 	public function DeleteNutirion($nid)
 	{
-		$gym_nutrition_data = TableRegistry::get('gym_nutrition_data');
+		$gym_nutrition_data = TableRegistry::get('gymNutritionData');
 		$delete_ok = $gym_nutrition_data->deleteAll(["nutrition_id"=>$nid]);
 		if($delete_ok)
 		{
@@ -298,7 +298,7 @@ class GymNutritionController extends AppController
 			}
 		}
 	}
-	
+
 	public function isAuthorized($user)
 	{
 		$role_name = $user["role_name"];
@@ -307,18 +307,18 @@ class GymNutritionController extends AppController
 		// $staff_actions = ["nutritionList","addnutritionSchedule","nutrition_detail","viewNutirion"];
 		$acc_actions = ["nutritionList"];
 		switch($role_name)
-		{			
+		{
 			CASE "member":
 				if(in_array($curr_action,$members_actions))
 				{return true;}else{return $this->redirect(["action"=>"memberNutrition"]);}
-				
+
 			break;
-			
+
 			// CASE "staff_member":
 				// if(in_array($curr_action,$staff_actions))
 				// {return true;}else{ return false;}
 			// break;
-			
+
 			CASE "accountant":
 				if(in_array($curr_action,$acc_actions))
 				{return true;}else{return false;}

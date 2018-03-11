@@ -183,7 +183,7 @@ Class MembershipController extends AppController
 
 		if($this->request->is("post"))
 		{
-			$membership_activity = TableRegistry::get("Membership_Activity");
+			$membership_activity = TableRegistry::get("MembershipActivity");
 			$data = $this->request->data;
 			$delete_row= $membership_activity->deleteAll(["membership_id"=>$data['membership_id']]);
 			$save_data = array();
