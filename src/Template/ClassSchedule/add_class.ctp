@@ -47,6 +47,13 @@ $(document).ready(function() {
 	});
 });
 </script>
+
+<style>
+.full-spectrum {
+	z-index: 1;
+}
+</style>
+
 <section class="content">
 	<br>
 	<div class="col-md-12 box box-default">
@@ -161,7 +168,6 @@ $(document).ready(function() {
 					</div>
 				</div>
 			';
-
 
 			echo $this->Form->button(__("Add Time"),['type'=>'button','id'=>'add_time','class'=>"btn btn-flat btn-success col-md-offset-2","name"=>"add_class"]);
 			echo "<br><br>";

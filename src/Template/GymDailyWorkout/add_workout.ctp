@@ -4,40 +4,38 @@ echo $this->Html->script('select2.min');
 ?>
 <script>
 $(document).ready(function(){
-	// moment.locale('he');
-	
 	var options = {
 		language: "de",
 		injectStyle:false,
-		squareEdges : true,
-		itemWidth : 50,
+		squareEdges: true,
+		itemWidth: 50,
 		showStartOfWeek: true,
-		offDays : '',
-		onSelectedDateChanged: function(event, date) {			
+		offDays: '',
+		onSelectedDateChanged: function(event, date) {
 			var assigned_dates = $("#date_range").val();
-			var dates = assigned_dates.split(",");	
-			var sel_date = $.datepicker.formatDate('yy-mm-dd', new Date(date));			
+			var dates = assigned_dates.split(",");
+			var sel_date = $.datepicker.formatDate('yy-mm-dd', new Date(date));
 			$("#record_date").val(sel_date);
-			
+
 		/*	for(var i=0;i<dates.length;i++)
-			{				
-				$("[data-moment=2016-07-13]").addClass(" tcolor");						
+			{
+				$("[data-moment=2016-07-13]").addClass(" tcolor");
 			} */
 	/*	// var formattedDate = new Date(date);
-		
+
 			// var sel_date = date._i;
 			// var sel_date = $(".dp-selected").attr("data-moment");
 			// var sel_date="";
 			// $("body").on("click",".dp-item",function(){
-				// sel_date = $(this).attr("data-moment");		
+				// sel_date = $(this).attr("data-moment");
 					// alert(sel_date);
 			// });
-			// console.log(formattedDate);	
+			// console.log(formattedDate);
 			// alert(formattedDate);
 			*/
-			
-			var uid = $("#mem_list").val();			
-			var ajaxurl = $("#paginator").attr("data-url");		
+
+			var uid = $("#mem_list").val();
+			var ajaxurl = $("#paginator").attr("data-url");
 			var curr_data = {sel_date:sel_date,uid:uid};
 			if(uid != "")
 			{
@@ -50,11 +48,11 @@ $(document).ready(function(){
 									$(".workout_area").html(response);
 									$("#note_area").show();
 									for(var i=0;i<dates.length;i++)
-									{			
+									{
 										if(dates != "")
 										{
 											$("[data-moment="+dates[i]+"]").addClass(" sel_date");
-										}										
+										}
 									}
 									$(".dp-selected").removeClass("sel_date");
 								},
@@ -66,13 +64,13 @@ $(document).ready(function(){
 			}else{
 				alert("Please Select Member!");
 			}
-		}		
+		}
 	};
 	$('#paginator').datepaginator(options);
 
 $(".mem_list").select2();
 
-$("a.dp-selected").click(function(e){	
+$("a.dp-selected").click(function(e){
     e.preventDefault();
 });
 
@@ -87,7 +85,7 @@ if(role == "member")
 </script>
 <section class="content">
 	<br>
-	<div class="col-md-12 box box-default">		
+	<div class="col-md-12 box box-default">
 		<div class="box-header">
 			<section class="content-header">
 			  <h1>
@@ -103,7 +101,7 @@ if(role == "member")
 			</section>
 		</div>
 		<hr>
-		<div class="box-body">	
+		<div class="box-body">
 		<?php
 			$session = $this->request->session()->read("User");
 			echo $this->Form->create("addWorkout",["class"=>"validateForm form-horizontal","role"=>"form"]);
@@ -113,7 +111,7 @@ if(role == "member")
 			<input type="hidden" id="user_id" value="<?php echo $session["id"];?>">
 			<label class="control-label col-md-2" for="email"><?php echo __("Select Member");?><span class="text-danger"> *</span></label>
 			<div class="col-md-8">
-				<?php 
+				<?php
 					echo $this->Form->select("member_id",$members,["default"=>($edit)?$this->request->params["pass"]:"","empty"=>__("Select Member"),"class"=>"mem_list","required"=>"true","id"=>"mem_list","data-url"=>$this->request->base ."/GymAjax/getWorkoutDates"]);
 				?>
 			</div>
@@ -124,16 +122,16 @@ if(role == "member")
 		<div class="form-group">
 			<label class="control-label col-md-2" for="email"><?php echo __("Select Date");?><span class="text-danger"> *</span></label>
 			<div class="col-md-8" id="paginator" data-url=<?php echo $this->request->base ."/GymAjax/gymWorkoutData";?>>
-				
+
 			</div>
 		</div>
 	<!--	<div class='form-group'>
 			<label class="control-label col-md-2" for="email"><?php echo __("Start Date");?><span class="text-danger"> *</span></label>
 			<div class="col-md-8">
-				<?php 
+				<?php
 					//echo $this->Form->input("",["label"=>false,"name"=>"record_date","class"=>"date validate[required] form-control","id"=>"record_date"]);
 				?>
-			</div>	
+			</div>
 		</div> -->
 		<input type="hidden" name="record_date" id='record_date'>
 		<div class='form-group'>
@@ -154,26 +152,26 @@ if(role == "member")
         	<input type="submit" value="<?php echo __("Save");?>" name="save_workout" class="btn btn-flat btn-success">
         </div>
 		<input type="hidden" id="date_range" disabled>
-		<?php 
+		<?php
 		$this->Form->end();
 		?>
-		
+
 	<!-- END -->
 		</div>
-		<div class='overlay gym-overlay'>
+		<!--div class='overlay gym-overlay'>
 			<i class='fa fa-refresh fa-spin'></i>
-		</div>
+		</div-->
 	</div>
 </section>
-	
+
 <script>
 
-function changeColor(){		
-		var assigned_dates = $("#date_range").val();		
+function changeColor(){
+		var assigned_dates = $("#date_range").val();
 		var dates = assigned_dates.split(",");
 		for(var i=0;i<dates.length;i++)
-		{				
-			$("[data-moment="+dates[i]+"]").addClass(" sel_date");						
-		} 
+		{
+			$("[data-moment="+dates[i]+"]").addClass(" sel_date");
+		}
 	}
 </script>

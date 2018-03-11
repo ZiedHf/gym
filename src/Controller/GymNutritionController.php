@@ -35,6 +35,7 @@ class GymNutritionController extends AppController
 	public function addNutritionSchedule()
 	{
 		$session = $this->request->session()->read("User");
+		$this->set("session", $session);
 		$this->set("edit",false);
 		$this->set("title",__("Add Nutrition Schedule"));
 
@@ -49,6 +50,9 @@ class GymNutritionController extends AppController
 				$members = $this->GymNutrition->GymMember->find("list",["keyField"=>"id","valueField"=>"name"])->where(["role_name"=>"member"]);
 				$members = $members->select(["id",'name'=>$members->func()->concat(['first_name'=>'literal',' ','last_name'=>'literal'])])->hydrate(false)->toArray();
 			}
+		}elseif($session["role_name"] == "member"){
+			$members = $this->GymNutrition->GymMember->find("list",["keyField"=>"id","valueField"=>"name"])->where(["role_name"=>"member","id"=>$session["id"]]);
+			$members = $members->select(["id",'name'=>$members->func()->concat(['first_name'=>'literal',' ','last_name'=>'literal'])])->hydrate(false)->toArray();
 		}
 		else{
 			$members = $this->GymNutrition->GymMember->find("list",["keyField"=>"id","valueField"=>"name"])->where(["role_name"=>"member"]);
@@ -303,8 +307,8 @@ class GymNutritionController extends AppController
 	{
 		$role_name = $user["role_name"];
 		$curr_action = $this->request->action;
-		$members_actions = ["memberNutrition","printNutrition"];
-		// $staff_actions = ["nutritionList","addnutritionSchedule","nutrition_detail","viewNutirion"];
+		$members_actions = ["memberNutrition","printNutrition", "addnutritionSchedule"];
+		$staff_actions = ["nutritionList","addnutritionSchedule","nutrition_detail","viewNutirion"];
 		$acc_actions = ["nutritionList"];
 		switch($role_name)
 		{

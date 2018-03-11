@@ -38,9 +38,11 @@ $(".content-wrapper").css("height",box_height+"px");
 					echo $this->Form->select("user_id",$members,["default"=>($edit)?$this->request->params["pass"]:"","empty"=>__("Select Member"),"class"=>"mem_list","required"=>"true"]);
 				?>
 			</div>
-			<div class="col-md-3">
-				<a href="<?php echo $this->request->base;?>/GymMember/addMember" class="btn btn-default btn-flat"><?php echo __("Add Member");?></a>
-			</div>
+			<?php if($session["role_name"] !== "member"){ ?>
+				<div class="col-md-3">
+					<a href="<?php echo $this->request->base;?>/GymMember/addMember" class="btn btn-default btn-flat"><?php echo __("Add Member");?></a>
+				</div>
+			<?php } ?>
 		</div>
 		<div class='form-group'>
 			<label class="control-label col-md-3" for="email"><?php echo __("Start Date");?><span class="text-danger"> *</span></label>
@@ -145,7 +147,7 @@ $(".content-wrapper").css("height",box_height+"px");
 
 			// var_dump($days_array);
 			if(!empty($days_array)){
-				
+
 			foreach($days_array as $data=>$row)
 			{?>
 				<div class="panel panel-default workout-block" id="remove_panel_<?php echo $data;?>">

@@ -74,6 +74,13 @@ $(document).ready(function() {
 	});
 });
 </script>
+
+<style>
+.full-spectrum {
+	z-index: 1;
+}
+</style>
+
 <section class="content">
 	<br>
 	<div class="col-md-12 box box-default">
