@@ -53,12 +53,13 @@ class ActivityController extends AppController
 			$this->request->data["created_by"] = $session["id"];
 			$this->request->data["created_date"] = date("Y-m-d");
 			$this->request->data["membership_id"] = [1];
+			$this->request->data['cat_id'] = 1;
 
 			$activity = $this->Activity->newEntity();
 			$activity = $this->Activity->patchEntity($activity,$this->request->data);
 			if($this->Activity->save($activity))
 			{
-				$id = $activity->id;
+				/*$id = $activity->id;
 				foreach($this->request->data["membership_id"] as $mid)
 				{
 					$ma[] = ["activity_id"=>$id,"membership_id"=>$mid,"created_by"=>$session["id"],"created_date"=>date("Y-m-d")];
@@ -67,7 +68,7 @@ class ActivityController extends AppController
 				foreach($membership_activity as $row)
 				{
 					$this->Activity->MembershipActivity->save($row);
-				}
+				}*/
 
 				$this->Flash->success(__("Success! Record Saved Successfully."));
 				return $this->redirect(["action"=>"activityList"]);
@@ -118,10 +119,11 @@ class ActivityController extends AppController
 		if($this->request->is("post"))
 		{
 			$row = $this->Activity->get($id);
+			$this->request->data['cat_id'] = 1;
 			$row = $this->Activity->patchEntity($row,$this->request->data);
 			if($this->Activity->save($row))
 			{
-				foreach($this->request->data["membership_id"] as $mid)
+				/*foreach($this->request->data["membership_id"] as $mid)
 				{
 					$ma[] = ["activity_id"=>$id,"membership_id"=>$mid];
 					$delete_ma[] = $id;
@@ -131,7 +133,7 @@ class ActivityController extends AppController
 				foreach($membership_activity as $row)
 				{
 					$this->Activity->MembershipActivity->save($row);
-				}
+				}*/
 
 				$this->Flash->success(__("Success! Record Updated Successfully."));
 				return $this->redirect(["action"=>"activityList"]);

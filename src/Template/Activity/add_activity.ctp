@@ -34,11 +34,11 @@ $(document).ready(function(){
 			<label class="control-label col-md-3" for="email"><?php echo __("Select Category");?><span class="text-danger"> *</span></label>
 			<div class="col-md-6">
 				<?php
-					echo $this->Form->select("cat_id",$categories,["default"=>($edit)?array($data['cat_id']):"","empty"=>__("Select Category"),"class"=>"validate[required] cat_list form-control"]);
+					echo $this->Form->select("cat_id",$categories,["default" => "1","empty"=>__("Select Category"),"class"=>"validate[required] cat_list form-control", "disabled" => true]);
 				?>
 			</div>
 			<div class="col-md-2">
-			<button class="form-control add_category btn btn-default btn-flat" type="button" data-url="<?php echo $this->Gym->createurl("GymAjax","addCategory"); ?>"><?php echo __("Add Category");?></button>
+			<!--button class="form-control add_category btn btn-default btn-flat" type="button" data-url="</?php echo $this->Gym->createurl("GymAjax","addCategory"); ?>"></?php echo __("Add Category");?></button-->
 			</div>
 		</div>
 		<div class='form-group'>
@@ -56,7 +56,7 @@ $(document).ready(function(){
 					echo $this->Form->select("assigned_to",$staff,["default"=>($edit)?array($data['assigned_to']):"","empty"=>__("Select Staff Member"),"class"=>"validate[required] form-control"]);
 				?>
 			</div>
-			<?php if($role == 'administrator'){ ?>			
+			<?php if($role == 'administrator'){ ?>
 				<div class="col-md-3">
 					<a href="<?php echo $this->request->base;?>/StaffMembers/addStaff" class="btn btn-flat btn-default"><?php echo __("Add Staff Member");?></a>
 				</div>

@@ -44,7 +44,6 @@ class GymAssignWorkoutController extends AppController
 		$categories = array();
 
 		$session = $this->request->session()->read("User");
-		//debug($session['id']); die();
 		if($session["role_name"] == "staff_member")
 		{
 			if($this->GYMFunction->getSettings("staff_can_view_own_member"))
@@ -97,11 +96,11 @@ class GymAssignWorkoutController extends AppController
 			$this->request->data["created_date"] = date("Y-m-d");
 			$this->request->data["created_by"] = $session["id"];
 			$this->request->data["direct_assign"] = 0;
-			
+
 			// test if start time < end time
 			$timeStampStart = strtotime($this->request->data["start_date"]);
 			$timeStampEnd = strtotime($this->request->data["end_date"]);
-			
+
 			$row = $this->GymAssignWorkout->patchEntity($row,$insert);
 
 			if(($timeStampStart < $timeStampEnd) && (!empty($this->request->data["activity_list"])) && ($this->GymAssignWorkout->save($row)))

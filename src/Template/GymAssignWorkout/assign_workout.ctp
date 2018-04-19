@@ -113,7 +113,7 @@ $(".content-wrapper").css("height",box_height+"px");
 					<label class="list-group-item bg-default"><?php echo __("Select Days");?></label>
 					<?php foreach ($this->Gym->days_array() as $key=>$name){?>
 					<div class="checkbox">
-					<label><input type="checkbox" value="" name="day[]" value="<?php echo $key;?>" id="<?php echo $key;?>" data-val="day"><?php echo __($name); ?> </label>
+					<label><input type="checkbox" class="days_checkbox" value="" name="day[]" value="<?php echo $key;?>" id="<?php echo $key;?>" data-val="day"><?php echo __($name); ?> </label>
 					</div>
 					<?php }?>
 				</div>
@@ -228,20 +228,20 @@ jQuery("body").on("click", "#add_workouttype", function(event){
 		 jsonObj2 = [];
 		 jsonObj = [];
 
-		 var day_check = $(".days_checkbox:checked").size();	
+		 var day_check = $(".days_checkbox:checked").size();
 		 if(day_check == 0)
 		 {
 			alert("Please select days.");
 			return false;
 		 }
-		 
+
 		 var activity_check = $(".activity_check:checked").size();
 		 if(activity_check == 0)
 		 {
 			alert("Please select activity.");
 			return false;
 		 }
-		 
+
 		 $(":checkbox:checked").each(function(o){
 
 			  var chkID = $(this).attr("id");

@@ -1518,8 +1518,10 @@ Class GymAjaxController extends AppController
 			$activity = TableRegistry::get("activity");
 			$mem_activity_tbl = TableRegistry::get("membershipActivity");
 			$activities = $mem_activity_tbl->find()->where(["membership_id"=>$membership]);
+			// print_r($activities->toArray()); die();
 			$activities = $activities->leftjoin(["activity"=>"activity"],
-										["activity.id = membership_activity.activity_id"])->select($activity)->hydrate(false)->toArray();
+										["activity.id = membershipActivity.activity_id"])->select($activity)->hydrate(false)->toArray();
+
 			foreach($activities as $activity)
 			{ ?>
 				<label class="activity_title"><strong><!-- Category Name here --></strong></label>
