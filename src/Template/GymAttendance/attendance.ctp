@@ -53,6 +53,12 @@ $(document).ready(function(){
 	?>
 			<div class="clearfix"> </div>
 			<div class="panel-body">
+				<div class="col-md-4 col-md-offset-8">
+					<div class="input-group">
+					  <span class="input-group-addon" id="basic-addon1"><i class="fa fa-search"></i></span>
+					  <input type="text" name="search" class="form-control" placeholder="Search .." aria-describedby="basic-addon1">
+					</div>
+				</div>
 				<form method="post" class="form-horizontal">
 			  <input type="hidden" name="class_id" value="<?php echo $class_id;?>">
 			  <input type="hidden" name="attendance_date" value="<?php echo $attendance_date;?>">
@@ -71,6 +77,8 @@ $(document).ready(function(){
 				  </label>
 			  </div>
 			<div class="col-md-12">
+			<label><b><?=__('All')?> :</b></label>
+			<input type="checkbox" name="selectall" />
 			<table class="table">
 				<thead>
 			   <tr>
@@ -80,7 +88,7 @@ $(document).ready(function(){
 					<th><?php echo __("Status");?></th>
 				</tr>
 				</thead>
-				<tbody>
+				<tbody id="result">
 
 				<?php foreach($data as $row)
 				{ ?>
@@ -115,3 +123,36 @@ $(document).ready(function(){
 		</div>
 	</div>
 </section>
+
+<script>
+	$(document).ready(function(){
+		$('input[name="search"]').on('keyup', function() {
+			serachScript();
+		});
+
+		$('input[name="selectall"]').on('change', function() {
+			var checkbox = $('table tbody input.checkbox1[type="checkbox"]').prop('checked', $(this).prop("checked"));
+		});
+	});
+
+
+	function serachScript(){
+		var searchVal = $('input[name="search"]').val();
+		var rows = $('table.table > tbody', 'tr');
+		for(var i = 1; i < rows.prevObject.length; i++) {
+			var row = rows.prevObject[i];
+			// name cell
+			var nameCell = rows.prevObject[i].cells[2];
+			var textContent = rows.prevObject[i].cells[2].textContent;
+			if(textContent.toLowerCase().includes(searchVal.toLowerCase())) {
+				if($(row).hasClass("hide")) {
+					$(row).removeClass('hide');
+				}
+			}else{
+				if(!$(row).hasClass("hide")) {
+					$(row).addClass('hide');
+				}
+			}
+		}
+	}
+</script>

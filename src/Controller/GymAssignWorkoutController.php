@@ -212,6 +212,7 @@ class GymAssignWorkoutController extends AppController
     {
 		$session = $this->request->session()->read("User");
 		$this->set("edit",true);
+		$this->set("session",$session);
 		$this->set("title",__("View Workout"));
 
 		// $session = $this->request->session()->read("User");

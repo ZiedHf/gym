@@ -373,6 +373,7 @@ class DashboardController extends AppController
 								'start' => $reservation_item["date"]->format("Y-m-d")."T{$start_time}",
 								'end' => $reservation_item["date"]->format("Y-m-d")."T{$end_time}",
 								'color' => $color,
+								'borderColor' => '#000',
 								'url' => Router::url(['controller' => 'GymReservation', 'action' => 'editReservation', $retrieved_data['id']]),
 								'max_members' => $retrieved_data['max_members'],
 								'number_participants' => $retrieved_data['number_participants'],
@@ -380,7 +381,7 @@ class DashboardController extends AppController
 						);
 					}
 				}
-				//debug($cal_arrayt);die();
+				// debug($cal_array);die();
 			}
 		}
 

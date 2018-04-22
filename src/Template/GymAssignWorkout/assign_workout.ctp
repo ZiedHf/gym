@@ -106,10 +106,9 @@ $(".content-wrapper").css("height",box_height+"px");
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-1 control-label"></label>
-			<div class="col-sm-10 border">
+			<div class="col-sm-12 border">
 				<br>
-				<div class="col-md-3">
+				<div class="col-sm-4">
 					<label class="list-group-item bg-default"><?php echo __("Select Days");?></label>
 					<?php foreach ($this->Gym->days_array() as $key=>$name){?>
 					<div class="checkbox">
@@ -117,14 +116,14 @@ $(".content-wrapper").css("height",box_height+"px");
 					</div>
 					<?php }?>
 				</div>
-				<div class="col-md-8 activity_list">
-				<label class="col-md-8 list-group-item bg-default"><?php echo __("Select workout activity to add on selected days");?></label>
-			<!-- <input type="button" value="<?php // echo __('Step-1 Add Workout');?>" name="sadd_workouttype" id="add_workouttype" class="pull-right btn btn-flat btn-info"/> -->
-				<div class="clearfix"></div>
-				<div id="append">
-				</div>
-				<br>
-				<input type="button" value="<?php echo __('Step-1 Add Workout');?>" name="sadd_workouttype" id="add_workouttype" class="pull-left btn btn-flat btn-info"/>
+				<div class="col-sm-8 activity_list">
+					<label class="col-sm-12 list-group-item bg-default"><?php echo __("Select workout activity to add on selected days");?></label>
+				<!-- <input type="button" value="<?php // echo __('Step-1 Add Workout');?>" name="sadd_workouttype" id="add_workouttype" class="pull-right btn btn-flat btn-info"/> -->
+					<div class="clearfix"></div>
+					<div id="append">
+					</div>
+					<br>
+					<input type="button" value="<?php echo __('Step-1 Add Workout');?>" name="sadd_workouttype" id="add_workouttype" class="pull-left btn btn-flat btn-info"/>
 				</div>
 			</div>
 		</div>
