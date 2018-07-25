@@ -789,3 +789,8 @@ table.dataTable thead th{
 
 @-moz-document url-prefix() {
     input[type=file] {padding:0px 12px;}
+}
+
+.reservationEvent {
+  border-width: 3px!important;
+}
